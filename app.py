@@ -15,9 +15,9 @@ CORS(app, supports_credentials=True)
 # --- CONFIGURATION ---
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
-MY_EMAIL = "dabkesarvesh7@gmail.com"
-MY_APP_PASSWORD = "izjq lhyn fxdh oxvv"
-DB_NAME = "portfolio_tracker.db"
+MY_EMAIL = os.environ.get("MY_EMAIL")
+MY_APP_PASSWORD = os.environ.get("MY_APP_PASSWORD")
+DB_NAME = os.environ.get("DB_NAME", "portfolio_tracker.db")
 
 # --- DATABASE SETUP ---
 def init_db():
