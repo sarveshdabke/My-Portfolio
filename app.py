@@ -11,12 +11,10 @@ import os
 from user_agents import parse  # Library to parse device/browser info
 
 app = Flask(__name__)
-CORS(
-    app,
-    supports_credentials=True,
-    origins=["https://sarvesh-dabke-portfolio.vercel.app"]
+CORS(app,
+     supports_credentials=True,
+     resources={r"/*": {"origins": "https://sarvesh-dabke-portfolio.vercel.app"}}
 )
-
 
 # --- CONFIGURATION ---
 SMTP_SERVER = "smtp.gmail.com"
