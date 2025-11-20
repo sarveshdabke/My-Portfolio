@@ -116,7 +116,7 @@ def view_logs():
 @app.route('/contact', methods=['POST'])
 def contact():
     try:
-        data = request.get_json()
+        data = request.get_json(silent=True) or {}
         name = data.get('name')
         visitor_email = data.get('email')
         subject = data.get('subject')
@@ -144,17 +144,22 @@ def contact():
         """
         msg.attach(MIMEText(body, 'plain'))
 
-        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-        server.starttls()
-        server.login(MY_EMAIL, MY_APP_PASSWORD)
-        server.send_message(msg)
-        server.quit()
+        # --- SMTP safe sending ---
+        try:
+            server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+            server.starttls()
+            server.login(MY_EMAIL, MY_APP_PASSWORD)
+            server.send_message(msg)
+            server.quit()
+        except Exception as smtp_error:
+            print("SMTP Error:", smtp_error)
+            return jsonify({"error": "Failed to send email. Check server credentials or network."}), 500
 
         return jsonify({"success": "Message sent successfully!"}), 200
 
     except Exception as e:
-        print(f"Email Error: {e}")
-        return jsonify({"error": "Failed to send message."}), 500
+        print(f"Contact Route Error: {e}")
+        return jsonify({"error": "Failed to process request."}), 500
 
 # --- DOWNLOAD DATABASE FILE ---
 @app.route('/download_db', methods=['GET'])
