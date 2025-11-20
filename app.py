@@ -7,6 +7,7 @@ import re
 import sqlite3
 import datetime
 import uuid
+import os
 from user_agents import parse  # Library to parse device/browser info
 
 app = Flask(__name__)
