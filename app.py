@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify, make_response, send_file
 from flask_cors import CORS
 import sqlite3
 import datetime
@@ -104,6 +104,19 @@ def view_logs():
     logs = [dict(row) for row in rows]
     return jsonify(logs)
 
+# --- DOWNLOAD DATABASE FILE ---
+@app.route('/download_db', methods=['GET'])
+def download_db():
+    try:
+        return send_file(
+            DB_NAME,
+            as_attachment=True,
+            download_name="portfolio_tracker.db"
+        )
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# --- MAIN ---
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
